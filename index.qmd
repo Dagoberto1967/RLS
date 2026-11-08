@@ -1,6 +1,6 @@
 ---
 title: "REGRESIÓN LINEAL SIMPLE"
-subtitle: "Teoría y aplicaciones en R"
+subtitle: "Teoría y aplicaciones en R y Rstudio"
 author: 
   - name: Dagoberto Salgado Horta
     affiliation: "Escuela Superior de Administración Pública"
