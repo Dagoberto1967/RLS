@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.553">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Dagoberto Salgado Horta">
+
+<title>REGRESIÓN LINEAL SIMPLE</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="index_files/libs/clipboard/clipboard.min.js"></script>
+<script src="index_files/libs/quarto-html/quarto.js"></script>
+<script src="index_files/libs/quarto-html/popper.min.js"></script>
+<script src="index_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="index_files/libs/quarto-html/anchor.min.js"></script>
+<link href="index_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="index_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="index_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="index_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="index_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<style>html{ scroll-behavior: smooth; }</style>
+<style>
+
+      .quarto-title-block .quarto-title-banner {
+        background: #98b6ed;
+      }
+</style>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="estilos.css">
+</head>
+
+<body>
+
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-page-left">
+      <h1 class="title">REGRESIÓN LINEAL SIMPLE</h1>
+            <p class="subtitle lead">Teoría y aplicaciones en R</p>
+                      </div>
+  </div>
+    
+  <div class="quarto-title-meta-author column-page-left">
+    <div class="quarto-title-meta-heading">Autor/a</div>
+    <div class="quarto-title-meta-heading">Afiliación</div>
+    
+      <div class="quarto-title-meta-contents">
+      <p class="author">Dagoberto Salgado Horta </p>
+    </div>
+    <div class="quarto-title-meta-contents">
+          <p class="affiliation">
+              <a href="https://www.esap.edu.co/">
+              Escuela Superior de Administración Pública
+              </a>
+            </p>
+        </div>
+    </div>
+
+  <div class="quarto-title-meta column-page-left">
+
+        
+      <div>
+      <div class="quarto-title-meta-heading">Fecha de publicación</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">7 de noviembre de 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="page-columns page-rows-contents page-layout-full">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Tabla de contenidos</h2>
+   
+  <ul>
+  <li><a href="#cargar-paquetes" id="toc-cargar-paquetes" class="nav-link active" data-scroll-target="#cargar-paquetes"><span class="header-section-number">1</span> .Cargar paquetes</a></li>
+  <li><a href="#introducción" id="toc-introducción" class="nav-link" data-scroll-target="#introducción"><span class="header-section-number">2</span> .Introducción</a></li>
+  <li><a href="#objetivos-de-aprendizaje" id="toc-objetivos-de-aprendizaje" class="nav-link" data-scroll-target="#objetivos-de-aprendizaje"><span class="header-section-number">3</span> .Objetivos de aprendizaje</a></li>
+  <li><a href="#conceptos-fundamentales" id="toc-conceptos-fundamentales" class="nav-link" data-scroll-target="#conceptos-fundamentales"><span class="header-section-number">4</span> .Conceptos fundamentales</a></li>
+  <li><a href="#estimación-por-mínimos-cuadrados-ordinarios" id="toc-estimación-por-mínimos-cuadrados-ordinarios" class="nav-link" data-scroll-target="#estimación-por-mínimos-cuadrados-ordinarios"><span class="header-section-number">5</span> .Estimación por mínimos cuadrados ordinarios</a></li>
+  <li><a href="#medidas-de-variabilidad-y-bondad-de-ajuste" id="toc-medidas-de-variabilidad-y-bondad-de-ajuste" class="nav-link" data-scroll-target="#medidas-de-variabilidad-y-bondad-de-ajuste"><span class="header-section-number">6</span> .Medidas de variabilidad y bondad de ajuste</a></li>
+  <li><a href="#inferencia-estadística" id="toc-inferencia-estadística" class="nav-link" data-scroll-target="#inferencia-estadística"><span class="header-section-number">7</span> .Inferencia estadística</a></li>
+  <li><a href="#supuestos-del-modelo-y-su-validación" id="toc-supuestos-del-modelo-y-su-validación" class="nav-link" data-scroll-target="#supuestos-del-modelo-y-su-validación"><span class="header-section-number">8</span> .Supuestos del modelo y su validación</a></li>
+  <li><a href="#ejemplo-aplicado" id="toc-ejemplo-aplicado" class="nav-link" data-scroll-target="#ejemplo-aplicado"><span class="header-section-number">9</span> .Ejemplo aplicado</a></li>
+  <li><a href="#ejercicio-propuesto" id="toc-ejercicio-propuesto" class="nav-link" data-scroll-target="#ejercicio-propuesto"><span class="header-section-number">10</span> .Ejercicio propuesto</a></li>
+  <li><a href="#conclusiones" id="toc-conclusiones" class="nav-link" data-scroll-target="#conclusiones"><span class="header-section-number">11</span> .Conclusiones</a></li>
+  <li><a href="#referencias-bibliográficas" id="toc-referencias-bibliográficas" class="nav-link" data-scroll-target="#referencias-bibliográficas"><span class="header-section-number">12</span> .Referencias bibliográficas</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
+
+
+
+
+
+<div style="position:absolute; top:10px; right:10px;">
+<img src="Logo_Esap.png" width="150">
+</div>
+<style>
+body{
+  background-color:#f7f6ed;
+  font-size:130%;
+  text-align:justify;
+}
+</style>
+<section id="cargar-paquetes" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> .Cargar paquetes</h1>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>ipak <span class="ot">&lt;-</span> <span class="cf">function</span>(pkg){</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">options</span>(<span class="at">repos =</span> <span class="fu">c</span>(<span class="at">CRAN=</span><span class="st">"https://cloud.r-project.org"</span>))</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  new.pkg <span class="ot">&lt;-</span> pkg[<span class="sc">!</span>(pkg <span class="sc">%in%</span> <span class="fu">rownames</span>(<span class="fu">installed.packages</span>()))]</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">length</span>(new.pkg)) <span class="fu">install.packages</span>(new.pkg, <span class="at">dependencies =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">invisible</span>(<span class="fu">lapply</span>(pkg, <span class="cf">function</span>(p)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">suppressPackageStartupMessages</span>(<span class="fu">library</span>(p, <span class="at">character.only =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>packages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"tidyverse"</span>,<span class="st">"kableExtra"</span>,<span class="st">"lmtest"</span>,<span class="st">"sandwich"</span>,<span class="st">"car"</span>,<span class="st">"readxl"</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">ipak</span>(packages)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="introducción" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> .Introducción</h1>
+<p>La <strong>regresión lineal simple</strong> es una técnica estadística que permite estudiar y cuantificar la relación lineal entre dos variables cuantitativas: una variable respuesta o dependiente, denotada por <span class="math inline">Y</span>, y una variable explicativa o independiente, denotada por <span class="math inline">X</span>. Además de describir la relación, el modelo permite estimar el valor medio de <span class="math inline">Y</span> para valores determinados de <span class="math inline">X</span> y realizar predicciones dentro del rango observado.</p>
+<p>La regresión no demuestra por sí sola una relación causal. Para interpretar causalmente sus resultados se requiere un diseño de investigación apropiado, control de factores de confusión y supuestos adicionales.</p>
+</section>
+<section id="objetivos-de-aprendizaje" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> .Objetivos de aprendizaje</h1>
+<p>Al finalizar el estudio, se espera que el estudiante pueda:</p>
+<ul>
+<li>Explicar el modelo de regresión lineal simple y sus componentes.</li>
+<li>Estimar los parámetros mediante mínimos cuadrados ordinarios.</li>
+<li>Interpretar la pendiente, el intercepto y las medidas de ajuste.</li>
+<li>Realizar inferencias sobre los parámetros del modelo.</li>
+<li>Evaluar los supuestos mediante diagnósticos gráficos y pruebas estadísticas en R.</li>
+<li>Identificar observaciones atípicas e influyentes y comunicar las limitaciones del análisis.</li>
+</ul>
+</section>
+<section id="conceptos-fundamentales" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> .Conceptos fundamentales</h1>
+<p><strong>Variables del modelo</strong></p>
+<ul>
+<li><strong>Variable respuesta (<span class="math inline">Y</span>)</strong>: resultado que se desea explicar o predecir.</li>
+<li><strong>Variable explicativa (<span class="math inline">X</span>)</strong>: variable utilizada para explicar o predecir cambios en la respuesta.</li>
+<li><strong>Error aleatorio (<span class="math inline">\varepsilon</span>)</strong>: diferencia no explicada por el modelo entre el valor observado y su componente sistemático.</li>
+</ul>
+<p>En regresión simple se utiliza una sola variable explicativa. Ambas variables deben ser cuantitativas para la formulación lineal usual.</p>
+<p><strong>Modelo poblacional</strong></p>
+<p>El modelo de regresión lineal simple se expresa como:</p>
+<p><span class="math display">
+Y_i=\beta_0+\beta_1X_i+\varepsilon_i,\qquad i=1,\ldots,n.
+</span></p>
+<p>Donde:</p>
+<ul>
+<li><span class="math inline">Y_i</span>: valor de la variable respuesta para la observación <span class="math inline">i</span>.</li>
+<li><span class="math inline">X_i</span>: valor de la variable explicativa para la observación <span class="math inline">i</span>.</li>
+<li><span class="math inline">\beta_0</span>: intercepto poblacional.</li>
+<li><span class="math inline">\beta_1</span>: pendiente poblacional.</li>
+<li><span class="math inline">\varepsilon_i</span>: error aleatorio.</li>
+<li><span class="math inline">n</span>: tamaño de la muestra.</li>
+</ul>
+<p>La parte sistemática del modelo es <span class="math inline">E(Y_i\mid X_i)=\beta_0+\beta_1X_i</span>, cuando el error tiene esperanza condicional cero.</p>
+<p><strong>Modelo estimado</strong></p>
+<p>A partir de una muestra se estiman los parámetros poblacionales y se obtiene:</p>
+<p><span class="math display">
+\widehat{Y}_i=b_0+b_1X_i.
+</span></p>
+<p>Aquí, <span class="math inline">\widehat{Y}_i</span> es el valor ajustado, <span class="math inline">b_0</span> es el intercepto estimado y <span class="math inline">b_1</span> es la pendiente estimada. El residuo de cada observación es:</p>
+<p><span class="math display">
+e_i=Y_i-\widehat{Y}_i.
+</span></p>
+<p><strong>Interpretación de los parámetros</strong></p>
+<p><strong>Intercepto (<span class="math inline">b_0</span>).</strong> Es el valor estimado de <span class="math inline">Y</span> cuando <span class="math inline">X=0</span>. Su interpretación sustantiva solo es pertinente si cero tiene sentido en el contexto y está dentro o cerca del rango de los datos.</p>
+<p><strong>Pendiente (<span class="math inline">b_1</span>).</strong> Representa el cambio promedio estimado en <span class="math inline">Y</span> por cada unidad adicional de <span class="math inline">X</span>. Si <span class="math inline">b_1&gt;0</span>, la asociación lineal estimada es positiva; si <span class="math inline">b_1&lt;0</span>, es negativa; y si <span class="math inline">b_1=0</span>, no hay pendiente lineal.</p>
+</section>
+<section id="estimación-por-mínimos-cuadrados-ordinarios" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> .Estimación por mínimos cuadrados ordinarios</h1>
+<p>El método de <strong>mínimos cuadrados ordinarios (MCO)</strong> selecciona los valores de <span class="math inline">b_0</span> y <span class="math inline">b_1</span> que minimizan la suma de los cuadrados de los residuos:</p>
+<p><span class="math display">
+S(b_0,b_1)=\sum_{i=1}^{n}(Y_i-b_0-b_1X_i)^2.
+</span></p>
+<p>Las estimaciones resultantes son:</p>
+<p><span class="math display">
+b_1=\frac{\sum_{i=1}^{n}(X_i-\bar X)(Y_i-\bar Y)}
+{\sum_{i=1}^{n}(X_i-\bar X)^2}
+=\frac{S_{XY}}{S_{XX}},
+</span></p>
+<p><span class="math display">
+b_0=\bar Y-b_1\bar X.
+</span></p>
+<p>Donde <span class="math inline">\bar X</span> y <span class="math inline">\bar Y</span> son las medias muestrales. La recta estimada pasa por el punto <span class="math inline">(\bar X,\bar Y)</span>.</p>
+<p><strong>Interpretación geométrica</strong></p>
+<p>La pendiente determina la inclinación de la recta y el intercepto determina dónde corta el eje vertical. MCO minimiza las distancias verticales al cuadrado entre los valores observados y la recta, no las distancias perpendiculares a ella.</p>
+</section>
+<section id="medidas-de-variabilidad-y-bondad-de-ajuste" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> .Medidas de variabilidad y bondad de ajuste</h1>
+<p>La variabilidad total de la respuesta se descompone, en presencia de intercepto, en variabilidad explicada por el modelo y variabilidad residual:</p>
+<p><span class="math display">
+SCT=\sum(Y_i-\bar Y)^2,
+</span> <span class="math display">
+SCR=\sum(\widehat Y_i-\bar Y)^2,\qquad
+SCE=\sum(Y_i-\widehat Y_i)^2,
+</span></p>
+<p><span class="math display">
+SCT=SCR+SCE.
+</span></p>
+<p>En esta notación, <span class="math inline">SCT</span> es la suma de cuadrados total, <span class="math inline">SCR</span> la suma de cuadrados de la regresión y <span class="math inline">SCE</span> la suma de cuadrados del error o residual.</p>
+<p><strong>Coeficiente de determinación</strong></p>
+<p><span class="math display">
+R^2=\frac{SCR}{SCT}=1-\frac{SCE}{SCT}.
+</span></p>
+<p>El coeficiente <span class="math inline">R^2</span> expresa la proporción de la variabilidad muestral de <span class="math inline">Y</span> explicada por la relación lineal con <span class="math inline">X</span>. Por ejemplo, <span class="math inline">R^2=0.64</span> indica que el 64 % de la variabilidad observada de la respuesta queda explicada por el modelo lineal en la muestra. No significa que el modelo tenga un 64 % de exactitud ni demuestra causalidad.</p>
+<p><strong>Error estándar de la regresión</strong></p>
+<p>En regresión simple con intercepto, los grados de libertad residuales son <span class="math inline">n-2</span>. La estimación de la varianza del error es:</p>
+<p><span class="math display">
+s^2=\frac{SCE}{n-2},\qquad s=\sqrt{s^2}.
+</span></p>
+<p>El error estándar residual, <span class="math inline">s</span>, mide la dispersión típica de los valores observados alrededor de la recta, en las unidades de <span class="math inline">Y</span>.</p>
+<p><strong>Correlación y regresión</strong></p>
+<p>En regresión simple con intercepto, <span class="math inline">R^2=r_{XY}^2</span>, donde <span class="math inline">r_{XY}</span> es la correlación de Pearson. El signo de la pendiente coincide con el signo de la correlación. La correlación es una medida simétrica de asociación; la regresión distingue entre respuesta y explicativa y proporciona una ecuación para estimar la respuesta.</p>
+</section>
+<section id="inferencia-estadística" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> .Inferencia estadística</h1>
+<p>La inferencia permite evaluar hipótesis sobre los parámetros y construir intervalos de confianza, bajo las condiciones del modelo.</p>
+<p><strong>Prueba de hipótesis para la pendiente</strong></p>
+<p>Una pregunta frecuente es si existe evidencia de una asociación lineal entre <span class="math inline">X</span> y la media condicional de <span class="math inline">Y</span>. Se plantea:</p>
+<p><span class="math display">
+H_0:\beta_1=0,\qquad H_1:\beta_1\ne 0.
+</span></p>
+<p>El estadístico de prueba es:</p>
+<p><span class="math display">
+t=\frac{b_1-0}{SE(b_1)},\qquad gl=n-2,
+</span></p>
+<p>con</p>
+<p><span class="math display">
+SE(b_1)=\frac{s}{\sqrt{\sum(X_i-\bar X)^2}}.
+</span></p>
+<p>Para una prueba bilateral, se rechaza <span class="math inline">H_0</span> si el valor p es menor que el nivel de significancia <span class="math inline">\alpha</span>, por ejemplo 0.05. Un valor p pequeño aporta evidencia contra la hipótesis nula; no mide el tamaño ni la importancia práctica del efecto.</p>
+<p><strong>Intervalo de confianza para la pendiente</strong></p>
+<p><span class="math display">
+b_1\pm t_{1-\alpha/2,\,n-2}SE(b_1).
+</span></p>
+<p>Un intervalo que no contiene cero corresponde a una prueba bilateral significativa al nivel <span class="math inline">\alpha</span>, siempre que se utilicen los mismos supuestos y método.</p>
+<p><strong>Prueba F global</strong></p>
+<p>En regresión lineal simple, la prueba F de significancia global contrasta <span class="math inline">H_0:\beta_1=0</span>. El estadístico es:</p>
+<p><span class="math display">
+F=\frac{SCR/1}{SCE/(n-2)}.
+</span></p>
+<p>En este modelo, la prueba F es equivalente a la prueba t bilateral para la pendiente: <span class="math inline">F=t^2</span>. En R, <code>summary(modelo)</code> presenta ambas pruebas.</p>
+<p><strong>Intervalos de confianza y predicción</strong></p>
+<p>Para un valor <span class="math inline">x_0</span>, el intervalo de confianza estima la media condicional <span class="math inline">E(Y\mid X=x_0)</span>. El intervalo de predicción estima un valor individual futuro de <span class="math inline">Y</span> para ese valor de <span class="math inline">X</span>, por lo que suele ser más amplio porque incorpora tanto la incertidumbre de la media estimada como la variabilidad individual.</p>
+<p>El código de predicción se ejecutará en el ejemplo aplicado, después de ajustar el modelo con <code>lm()</code>. Esto garantiza que el objeto <code>modelo</code> exista antes de llamar a <code>predict()</code>.</p>
+</section>
+<section id="supuestos-del-modelo-y-su-validación" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> .Supuestos del modelo y su validación</h1>
+<p>La calidad de una regresión no debe juzgarse únicamente por el valor de <span class="math inline">R^2</span> o por la significancia de la pendiente. Es necesario examinar si la forma funcional y el comportamiento de los errores son razonables.</p>
+<p>El modelo clásico suele formular los siguientes supuestos:</p>
+<p><strong>Linealidad en la media condicional</strong></p>
+<p>Se supone que la media de <span class="math inline">Y</span>, condicionada a <span class="math inline">X</span>, sigue una función lineal:</p>
+<p><span class="math display">
+E(Y_i\mid X_i)=\beta_0+\beta_1X_i.
+</span></p>
+<p><strong>Diagnóstico:</strong> gráfico de residuos frente a valores ajustados y gráfico de residuos frente a <span class="math inline">X</span>. Se espera una nube sin patrones sistemáticos alrededor de cero. Curvaturas o patrones persistentes pueden indicar que la relación no es lineal.</p>
+<p><strong>Alternativas:</strong> revisar errores de medición y variables omitidas; considerar una transformación o un término polinómico si tiene justificación sustantiva. No debe añadirse complejidad solo para mejorar una prueba.</p>
+<p><strong>Independencia de los errores</strong></p>
+<p>Se requiere que los errores de distintas observaciones no presenten dependencia, condición especialmente importante en datos ordenados en el tiempo, espaciales o agrupados.</p>
+<p><strong>Diagnóstico:</strong> examinar residuos según el orden de observación y el diseño de muestreo. La prueba de Durbin-Watson evalúa autocorrelación de primer orden en contextos apropiados.</p>
+<p><strong>Precaución:</strong> Durbin-Watson no es una prueba universal de independencia. En datos transversales, la independencia debe justificarse principalmente por el diseño y el proceso de muestreo. Si hay medidas repetidas o agrupamientos, puede requerirse un modelo multinivel, errores estándar agrupados o modelos de correlación.</p>
+<p><strong>Homocedasticidad</strong></p>
+<p>La varianza condicional del error debe ser constante:</p>
+<p><span class="math display">
+Var(\varepsilon_i\mid X_i)=\sigma^2.
+</span></p>
+<p><strong>Diagnóstico gráfico:</strong> residuos frente a valores ajustados. Una dispersión aproximadamente constante es compatible con homocedasticidad; una forma de embudo sugiere heterocedasticidad.</p>
+<p><strong>Prueba de Breusch-Pagan:</strong> contrasta una hipótesis nula de varianza constante frente a una alternativa en la que la varianza depende de variables explicativas. Un valor p pequeño aporta evidencia de heterocedasticidad.</p>
+<p><strong>Alternativas:</strong> errores estándar robustos a heterocedasticidad (por ejemplo, HC3), transformación de la respuesta cuando sea defendible o modelación explícita de la varianza. Los errores robustos modifican la inferencia, pero no corrigen una forma funcional incorrecta.</p>
+<p><strong>Normalidad de los errores</strong></p>
+<p>Para la inferencia t y F exacta en muestras pequeñas bajo el modelo clásico, se suele asumir:</p>
+<p><span class="math display">
+\varepsilon_i\mid X_i\sim N(0,\sigma^2).
+</span></p>
+<p>La normalidad se refiere a los errores no observables; en la práctica se examinan los residuos como aproximación.</p>
+<p><strong>Diagnóstico gráfico:</strong> histograma y gráfico Q-Q normal de los residuos. En el Q-Q, los puntos deberían aproximarse a una línea recta, sin desviaciones sistemáticas importantes.</p>
+<p><strong>Prueba de Shapiro-Wilk:</strong> contrasta normalidad. Un valor p pequeño sugiere desviaciones respecto a la normalidad. La prueba es sensible al tamaño muestral: con muestras grandes puede detectar desviaciones pequeñas y con muestras pequeñas puede tener poca potencia.</p>
+<p>La falta de normalidad no implica automáticamente que la pendiente MCO esté sesgada. Puede afectar la inferencia exacta en muestras pequeñas; también deben revisarse valores atípicos, asimetría y especificación del modelo.</p>
+<p><strong>Observaciones atípicas e influyentes</strong></p>
+<p>Una observación atípica presenta un residuo inusualmente grande. Una observación de alto apalancamiento tiene un valor de <span class="math inline">X</span> alejado del centro de los datos. Una observación influyente es aquella cuya eliminación cambia sustancialmente el ajuste o las estimaciones.</p>
+<p>Herramientas habituales:</p>
+<ul>
+<li><strong>Residuos studentizados:</strong> ayudan a identificar respuestas inusuales dado el modelo.</li>
+<li><strong>Apalancamiento (leverage):</strong> mide qué tan extrema es una observación en el espacio de las variables explicativas.</li>
+<li><strong>Distancia de Cook:</strong> resume la influencia de una observación sobre el ajuste.</li>
+</ul>
+<p>Las reglas orientativas, como <span class="math inline">|r_i|&gt;2</span>, leverage mayor que <span class="math inline">2p/n</span> o Cook mayor que <span class="math inline">4/n</span>, son señales para investigar, no criterios automáticos para eliminar datos. En regresión simple con intercepto, <span class="math inline">p=2</span> parámetros estimados. Toda decisión debe justificarse con el contexto y, de ser útil, un análisis de sensibilidad.</p>
+<p><strong>Exogeneidad y especificación</strong></p>
+<p>Una condición central para interpretar MCO como estimador insesgado es que:</p>
+<p><span class="math display">
+E(\varepsilon_i\mid X_i)=0.
+</span></p>
+<p>Esto implica que la variable explicativa no está sistemáticamente relacionada con factores no observados incluidos en el error. Puede fallar por variables omitidas, simultaneidad, errores de medición o selección. No existe una prueba gráfica sencilla que garantice este supuesto; se fundamenta con teoría, diseño y conocimiento del proceso de generación de datos.</p>
+<p><strong>¿Existe el supuesto de multicolinealidad en regresión simple?</strong></p>
+<p>La multicolinealidad se refiere a relaciones lineales entre dos o más variables explicativas. En una regresión lineal simple hay una sola variable explicativa, por lo que no existe multicolinealidad entre predictores. Sí es necesario que <span class="math inline">X</span> tenga variabilidad; si todos los valores de <span class="math inline">X</span> son iguales, la pendiente no puede estimarse.</p>
+</section>
+<section id="ejemplo-aplicado" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> .Ejemplo aplicado</h1>
+<p>Una entidad pública desea estudiar si el presupuesto mensual destinado al mantenimiento preventivo de la infraestructura (en millones de pesos) está asociado con el tiempo promedio de respuesta ante solicitudes de mantenimiento (en horas). Para el ejemplo didáctico se construye una base sintética de 30 dependencias. Los datos son simulados y no representan registros reales de una entidad.</p>
+<ul>
+<li><span class="math inline">X</span>: presupuesto mensual de mantenimiento, en millones de pesos.</li>
+<li><span class="math inline">Y</span>: tiempo promedio de respuesta, en horas.</li>
+</ul>
+<p>La pregunta es: <strong>¿cómo cambia el tiempo promedio de respuesta asociado con un incremento de una unidad en el presupuesto mensual?</strong> La asociación observada no debe interpretarse automáticamente como efecto causal.</p>
+<p><strong>Preparación de los datos</strong></p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Instalar una sola vez si es necesario:</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(c("ggplot2", "lmtest", "sandwich", "car"))</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lmtest)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sandwich)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2026</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">30</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>presupuesto <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">10</span>, <span class="dv">80</span>, <span class="at">length.out =</span> n)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>error <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="fl">3.5</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>tiempo_respuesta <span class="ot">&lt;-</span> <span class="dv">42</span> <span class="sc">-</span> <span class="fl">0.38</span> <span class="sc">*</span> presupuesto <span class="sc">+</span> error</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(presupuesto, tiempo_respuesta)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(datos)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>  presupuesto tiempo_respuesta
+1    10.00000         40.02206
+2    12.41379         33.50384
+3    14.82759         36.85285
+4    17.24138         35.15166
+5    19.65517         32.19780
+6    22.06897         24.80748</code></pre>
+</div>
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(datos)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>  presupuesto   tiempo_respuesta
+ Min.   :10.0   Min.   :13.15   
+ 1st Qu.:27.5   1st Qu.:18.75   
+ Median :45.0   Median :25.15   
+ Mean   :45.0   Mean   :24.65   
+ 3rd Qu.:62.5   3rd Qu.:28.94   
+ Max.   :80.0   Max.   :40.02   </code></pre>
+</div>
+</div>
+<p><strong>Análisis descriptivo y gráfico de dispersión</strong></p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(datos<span class="sc">$</span>presupuesto)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   10.0    27.5    45.0    45.0    62.5    80.0 </code></pre>
+</div>
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(datos<span class="sc">$</span>tiempo_respuesta)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  13.15   18.75   25.15   24.65   28.94   40.02 </code></pre>
+</div>
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(datos<span class="sc">$</span>presupuesto)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 21.24961</code></pre>
+</div>
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(datos<span class="sc">$</span>tiempo_respuesta)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 7.057916</code></pre>
+</div>
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(datos<span class="sc">$</span>presupuesto, datos<span class="sc">$</span>tiempo_respuesta)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -0.8800703</code></pre>
+</div>
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(datos, <span class="fu">aes</span>(<span class="at">x =</span> presupuesto, <span class="at">y =</span> tiempo_respuesta)) <span class="sc">+</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">2.5</span>) <span class="sc">+</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Presupuesto de mantenimiento y tiempo de respuesta"</span>,</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Datos sintéticos con recta de regresión e intervalo de confianza"</span>,</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Presupuesto mensual (millones de pesos)"</span>,</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Tiempo promedio de respuesta (horas)"</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>El gráfico permite observar la dirección, la forma aproximada y la dispersión de la relación. Antes de ajustar el modelo, conviene verificar que no haya errores de digitación ni observaciones que requieran investigación.</p>
+<p><strong>Estimación del modelo</strong></p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>modelo <span class="ot">&lt;-</span> <span class="fu">lm</span>(tiempo_respuesta <span class="sc">~</span> presupuesto, <span class="at">data =</span> datos)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Coeficientes estimados</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(modelo)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept) presupuesto 
+ 37.8004295  -0.2923095 </code></pre>
+</div>
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Resumen completo: errores estándar, pruebas t, R cuadrado y prueba F</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = tiempo_respuesta ~ presupuesto, data = datos)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-8.5548 -1.6712 -0.2211  2.3166  5.1447 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 37.80043    1.47876  25.562  &lt; 2e-16 ***
+presupuesto -0.29231    0.02981  -9.807 1.48e-10 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3.411 on 28 degrees of freedom
+Multiple R-squared:  0.7745,    Adjusted R-squared:  0.7665 
+F-statistic: 96.18 on 1 and 28 DF,  p-value: 1.477e-10</code></pre>
+</div>
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalos de confianza para los coeficientes</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(modelo, <span class="at">level =</span> <span class="fl">0.95</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 2.5 %     97.5 %
+(Intercept) 34.7713358 40.8295232
+presupuesto -0.3533634 -0.2312556</code></pre>
+</div>
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicción para una dependencia con presupuesto de 50 millones</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>nuevo_caso <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">presupuesto =</span> <span class="dv">50</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalo de confianza para el tiempo promedio esperado</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(modelo, <span class="at">newdata =</span> nuevo_caso,</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">interval =</span> <span class="st">"confidence"</span>, <span class="at">level =</span> <span class="fl">0.95</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>       fit      lwr      upr
+1 23.18495 21.87337 24.49654</code></pre>
+</div>
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalo de predicción para el tiempo de una dependencia individual</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(modelo, <span class="at">newdata =</span> nuevo_caso,</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">interval =</span> <span class="st">"prediction"</span>, <span class="at">level =</span> <span class="fl">0.95</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>       fit      lwr      upr
+1 23.18495 16.07635 30.29356</code></pre>
+</div>
+</div>
+<p>La ecuación estimada tiene la forma:</p>
+<p><span class="math display">
+\widehat{Y}=b_0+b_1X.
+</span></p>
+<p>Interprete el intercepto como el tiempo estimado cuando el presupuesto es cero, únicamente si ese valor tiene sentido contextual. La pendiente indica el cambio promedio estimado en horas asociado con un aumento de un millón de pesos en el presupuesto mensual. El signo y la magnitud deben interpretarse junto con su intervalo de confianza y el rango observado de presupuestos.</p>
+<p><strong>Validación gráfica de los supuestos</strong></p>
+<p>La función <code>plot()</code> aplicada a un objeto <code>lm</code> produce cuatro gráficos diagnósticos clásicos.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(modelo)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p><strong>Interpretación de los paneles:</strong></p>
+<ol type="1">
+<li><strong>Residuals vs Fitted:</strong> busca patrones o curvaturas y cambios en la dispersión. Una nube sin estructura es deseable.</li>
+<li><strong>Normal Q-Q:</strong> evalúa si los residuos se aproximan a una distribución normal.</li>
+<li><strong>Scale-Location:</strong> examina si la dispersión de los residuos estandarizados es aproximadamente constante.</li>
+<li><strong>Residuals vs Leverage:</strong> ayuda a detectar observaciones con alto apalancamiento e influencia; las curvas de Cook orientan la revisión.</li>
+</ol>
+<p><strong>Gráfico específico de residuos frente a valores ajustados</strong></p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>diagnosticos <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">ajustados =</span> <span class="fu">fitted</span>(modelo),</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">residuos =</span> <span class="fu">resid</span>(modelo),</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">residuos_estandarizados =</span> <span class="fu">rstandard</span>(modelo)</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diagnosticos, <span class="fu">aes</span>(<span class="at">x =</span> ajustados, <span class="at">y =</span> residuos)) <span class="sc">+</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"loess"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Residuos frente a valores ajustados"</span>,</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Valores ajustados"</span>,</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Residuos"</span></span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Se espera que los residuos se distribuyan alrededor de cero sin una curva definida y con amplitud aproximadamente constante.</p>
+<p><strong>Gráfico Q-Q normal</strong></p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(diagnosticos, <span class="fu">aes</span>(<span class="at">sample =</span> residuos)) <span class="sc">+</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq_line</span>() <span class="sc">+</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Gráfico Q-Q normal de los residuos"</span>,</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Cuantiles teóricos normales"</span>,</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Cuantiles muestrales"</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Una alineación aproximada con la recta es compatible con normalidad razonable. Desviaciones en las colas pueden indicar colas pesadas, asimetría o valores atípicos.</p>
+<p><strong>Pruebas estadísticas para los supuestos</strong></p>
+<p><strong>A. Normalidad: Shapiro-Wilk</strong></p>
+<p>Hipótesis:</p>
+<p><span class="math display">
+H_0:\text{los errores siguen una distribución normal}
+</span> <span class="math display">
+H_1:\text{los errores no siguen una distribución normal}
+</span></p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>prueba_shapiro <span class="ot">&lt;-</span> <span class="fu">shapiro.test</span>(<span class="fu">residuals</span>(modelo))</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>prueba_shapiro</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  residuals(modelo)
+W = 0.94679, p-value = 0.1387</code></pre>
+</div>
+</div>
+<p>Con <span class="math inline">\alpha=0.05</span>: si el valor p es menor que 0.05, se rechaza la hipótesis nula y se encuentra evidencia de desviación respecto a la normalidad. Si es mayor o igual que 0.05, no se rechaza la hipótesis nula; esto no demuestra que los errores sean normales. Complementar siempre con el Q-Q plot y la revisión de observaciones atípicas.</p>
+<p><strong>B. Homocedasticidad: Breusch-Pagan</strong></p>
+<p>Hipótesis:</p>
+<p><span class="math display">
+H_0:\operatorname{Var}(\varepsilon_i\mid X_i)=\sigma^2
+</span> <span class="math display">
+H_1:\operatorname{Var}(\varepsilon_i\mid X_i)\text{ no es constante}
+</span></p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>prueba_bp <span class="ot">&lt;-</span> <span class="fu">bptest</span>(modelo)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>prueba_bp</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    studentized Breusch-Pagan test
+
+data:  modelo
+BP = 0.0042373, df = 1, p-value = 0.9481</code></pre>
+</div>
+</div>
+<p>Con <span class="math inline">\alpha=0.05</span>, un valor p menor que 0.05 indica evidencia de heterocedasticidad. Un valor p mayor o igual que 0.05 significa que no se encontró evidencia suficiente para rechazar la homocedasticidad; no prueba que la varianza sea constante.</p>
+<p>Si se detecta heterocedasticidad, se pueden calcular errores estándar robustos:</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coeftest</span>(modelo, <span class="at">vcov. =</span> <span class="fu">vcovHC</span>(modelo, <span class="at">type =</span> <span class="st">"HC3"</span>))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+t test of coefficients:
+
+             Estimate Std. Error t value  Pr(&gt;|t|)    
+(Intercept) 37.800430   1.549041 24.4025 &lt; 2.2e-16 ***
+presupuesto -0.292310   0.031352 -9.3235 4.414e-10 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>Los coeficientes MCO permanecen iguales; cambian los errores estándar, estadísticos y valores p utilizados para la inferencia robusta.</p>
+<p><strong>C. Independencia: Durbin-Watson</strong></p>
+<p>Hipótesis usuales de la prueba:</p>
+<p><span class="math display">
+H_0:\rho=0 \quad\text{(sin autocorrelación de primer orden)}
+</span> <span class="math display">
+H_1:\rho\ne 0 \quad\text{(autocorrelación de primer orden)}
+</span></p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>prueba_dw <span class="ot">&lt;-</span> <span class="fu">dwtest</span>(modelo)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>prueba_dw</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Durbin-Watson test
+
+data:  modelo
+DW = 2.1864, p-value = 0.6245
+alternative hypothesis: true autocorrelation is greater than 0</code></pre>
+</div>
+</div>
+<p>Esta prueba tiene sentido cuando el orden de las observaciones es sustantivo, por ejemplo, una serie temporal. En este ejemplo didáctico las observaciones son dependencias y no una secuencia temporal; por tanto, no se debe interpretar Durbin-Watson como una validación concluyente de independencia. La independencia debe justificarse a partir del diseño de recolección y de la estructura de los datos.</p>
+<p><strong>D. Linealidad</strong></p>
+<p>No existe una única prueba que certifique la linealidad. Se evalúa principalmente mediante el gráfico de dispersión y los residuos frente a los valores ajustados. Como herramienta complementaria, puede compararse el modelo lineal con uno que incluya un término cuadrático, siempre que exista justificación:</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>modelo_cuadratico <span class="ot">&lt;-</span> <span class="fu">lm</span>(tiempo_respuesta <span class="sc">~</span> presupuesto <span class="sc">+</span> <span class="fu">I</span>(presupuesto<span class="sc">^</span><span class="dv">2</span>),</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">data =</span> datos)</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(modelo, modelo_cuadratico)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Model 1: tiempo_respuesta ~ presupuesto
+Model 2: tiempo_respuesta ~ presupuesto + I(presupuesto^2)
+  Res.Df    RSS Df Sum of Sq      F  Pr(&gt;F)  
+1     28 325.73                              
+2     27 293.24  1    32.489 2.9915 0.09512 .
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>Un valor p pequeño en la comparación sugiere que el término cuadrático mejora el ajuste respecto al modelo lineal, pero no debe tomarse como decisión automática: también se consideran gráficos, teoría y validación fuera de muestra.</p>
+<p><strong>Detección de observaciones atípicas e influyentes</strong></p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Residuos studentizados</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>res_student <span class="ot">&lt;-</span> <span class="fu">rstudent</span>(modelo)</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Apalancamiento</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>apalancamiento <span class="ot">&lt;-</span> <span class="fu">hatvalues</span>(modelo)</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Distancia de Cook</span></span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>cook <span class="ot">&lt;-</span> <span class="fu">cooks.distance</span>(modelo)</span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Tabla de diagnóstico por observación</span></span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>tabla_diagnostico <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">observacion =</span> <span class="fu">seq_len</span>(<span class="fu">nrow</span>(datos)),</span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">presupuesto =</span> datos<span class="sc">$</span>presupuesto,</span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">tiempo_respuesta =</span> datos<span class="sc">$</span>tiempo_respuesta,</span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">residuo_studentizado =</span> res_student,</span>
+<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">leverage =</span> apalancamiento,</span>
+<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">cook =</span> cook</span>
+<span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb41-19"><a href="#cb41-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-20"><a href="#cb41-20" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(tabla_diagnostico[<span class="fu">order</span>(<span class="sc">-</span>tabla_diagnostico<span class="sc">$</span>cook), ], <span class="dv">10</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   observacion presupuesto tiempo_respuesta residuo_studentizado   leverage
+1            1    10.00000         40.02206             1.664541 0.12688172
+6            6    22.06897         24.80748            -2.112267 0.07348906
+15          15    43.79310         16.44454            -2.859550 0.03344457
+23          23    63.10345         13.14859            -1.969116 0.05836114
+26          26    70.34483         21.94726             1.471036 0.08238784
+30          30    80.00000         17.63970             1.012055 0.12688172
+27          27    72.75862         20.41003             1.202693 0.09217649
+3            3    14.82759         36.85285             1.050247 0.10285502
+24          24    65.51724         22.23383             1.090895 0.06548016
+16          16    46.20690         29.15588             1.480550 0.03344457
+         cook
+1  0.18934499
+6  0.15747663
+15 0.11260643
+23 0.10896050
+26 0.09326791
+30 0.07435808
+27 0.07228164
+3  0.06299718
+24 0.04141132
+16 0.03637547</code></pre>
+</div>
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráficos de influencia</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(modelo, <span class="at">which =</span> <span class="dv">4</span>) <span class="co"># Distancia de Cook</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(modelo, <span class="at">which =</span> <span class="dv">5</span>) <span class="co"># Leverage y residuos studentizados</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Las observaciones señaladas deben revisarse en la fuente original. No se deben eliminar automáticamente: pueden ser errores, casos válidos pero inusuales o evidencia de que el modelo no representa adecuadamente todos los casos. Es recomendable comparar los resultados con y sin observaciones influyentes, explicando la razón de cualquier exclusión.</p>
+<p><strong>Resumen automatizado de diagnósticos</strong></p>
+<p>El siguiente código organiza los resultados de las pruebas utilizadas. Los resultados deben interpretarse junto con los gráficos y el diseño del estudio.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>p_shapiro <span class="ot">&lt;-</span> prueba_shapiro<span class="sc">$</span>p.value</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>p_bp <span class="ot">&lt;-</span> prueba_bp<span class="sc">$</span>p.value</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>resumen_pruebas <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Supuesto =</span> <span class="fu">c</span>(<span class="st">"Normalidad de residuos"</span>, <span class="st">"Homocedasticidad"</span>),</span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">Prueba =</span> <span class="fu">c</span>(<span class="st">"Shapiro-Wilk"</span>, <span class="st">"Breusch-Pagan"</span>),</span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">Valor_p =</span> <span class="fu">c</span>(p_shapiro, p_bp),</span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">Decision =</span> <span class="fu">c</span>(</span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ifelse</span>(p_shapiro <span class="sc">&lt;</span> alpha,</span>
+<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a>           <span class="st">"Evidencia de desviación de normalidad"</span>,</span>
+<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a>           <span class="st">"No se rechaza normalidad"</span>),</span>
+<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ifelse</span>(p_bp <span class="sc">&lt;</span> alpha,</span>
+<span id="cb45-15"><a href="#cb45-15" aria-hidden="true" tabindex="-1"></a>           <span class="st">"Evidencia de heterocedasticidad"</span>,</span>
+<span id="cb45-16"><a href="#cb45-16" aria-hidden="true" tabindex="-1"></a>           <span class="st">"No se rechaza homocedasticidad"</span>)</span>
+<span id="cb45-17"><a href="#cb45-17" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb45-18"><a href="#cb45-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb45-19"><a href="#cb45-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-20"><a href="#cb45-20" aria-hidden="true" tabindex="-1"></a>resumen_pruebas</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 Supuesto        Prueba   Valor_p
+   Normalidad de residuos  Shapiro-Wilk 0.1386523
+BP       Homocedasticidad Breusch-Pagan 0.9480985
+                         Decision
+         No se rechaza normalidad
+BP No se rechaza homocedasticidad</code></pre>
+</div>
+</div>
+<p>No se incluye una decisión automática sobre independencia o linealidad porque estas requieren considerar el diseño, el orden de observación y los gráficos correspondientes.</p>
+<p><strong>Predicción</strong></p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>nuevo_caso <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">presupuesto =</span> <span class="fu">c</span>(<span class="dv">30</span>, <span class="dv">50</span>, <span class="dv">70</span>))</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimación de la media condicional</span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(modelo, <span class="at">newdata =</span> nuevo_caso,</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">interval =</span> <span class="st">"confidence"</span>, <span class="at">level =</span> <span class="fl">0.95</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>       fit      lwr      upr
+1 29.03114 27.46087 30.60142
+2 23.18495 21.87337 24.49654
+3 17.33876 15.34959 19.32793</code></pre>
+</div>
+<details class="code-fold">
+<summary>Ver código</summary>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicción de observaciones individuales</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(modelo, <span class="at">newdata =</span> nuevo_caso,</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">interval =</span> <span class="st">"prediction"</span>, <span class="at">level =</span> <span class="fl">0.95</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>       fit      lwr      upr
+1 29.03114 21.87030 36.19199
+2 23.18495 16.07635 30.29356
+3 17.33876 10.07455 24.60298</code></pre>
+</div>
+</div>
+<p>Las predicciones deben realizarse preferiblemente dentro del rango de presupuestos observado (10 a 80 millones en esta simulación). Predecir fuera de ese rango es extrapolar y puede ser poco confiable.</p>
+<p><strong>¿Qué hacer cuando no se cumplen los supuestos?</strong></p>
+<table class="table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Hallazgo</th>
+<th>Posibles acciones</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>No linealidad</td>
+<td>Revisar la teoría, explorar transformaciones o términos no lineales y comparar diagnósticos.</td>
+</tr>
+<tr class="even">
+<td>Heterocedasticidad</td>
+<td>Usar errores estándar robustos, revisar transformaciones o modelar la varianza.</td>
+</tr>
+<tr class="odd">
+<td>Residuos no normales</td>
+<td>Revisar valores atípicos y especificación; considerar inferencia robusta o métodos alternativos según el tamaño muestral y el objetivo.</td>
+</tr>
+<tr class="even">
+<td>Dependencia</td>
+<td>Modelar la estructura temporal, espacial o por grupos; considerar errores estándar o modelos que contemplen esa dependencia.</td>
+</tr>
+<tr class="odd">
+<td>Observaciones influyentes</td>
+<td>Verificar datos, justificar su tratamiento y realizar análisis de sensibilidad.</td>
+</tr>
+<tr class="even">
+<td>Endogeneidad o variables omitidas</td>
+<td>Revisar el diseño, incorporar variables relevantes o considerar estrategias de identificación causal apropiadas.</td>
+</tr>
+</tbody>
+</table>
+<p>Ninguna transformación o prueba aislada garantiza que el modelo sea correcto. La decisión debe integrar el contexto, el diseño de investigación, la evidencia gráfica y el propósito del análisis.</p>
+<p><strong>Lista de verificación para reportar una regresión</strong></p>
+<p>Antes de presentar resultados, compruebe que el informe incluya:</p>
+<ol type="1">
+<li>Definición operacional de las variables, unidades y fuente de datos.</li>
+<li>Justificación teórica de la relación propuesta y del modelo lineal.</li>
+<li>Tamaño de muestra, descripción de datos y gráfico de dispersión.</li>
+<li>Ecuación estimada, coeficientes, errores estándar e intervalos de confianza.</li>
+<li>Estadístico de prueba, grados de libertad y valor p para la pendiente.</li>
+<li><span class="math inline">R^2</span>, error estándar residual y una interpretación contextual, sin exagerar su alcance.</li>
+<li>Diagnósticos de linealidad, independencia, homocedasticidad, normalidad y observaciones influyentes.</li>
+<li>Métodos alternativos o ajustes utilizados cuando corresponda.</li>
+<li>Limitaciones, especialmente las relacionadas con causalidad y extrapolación.</li>
+</ol>
+</section>
+<section id="ejercicio-propuesto" class="level1" data-number="10">
+<h1 data-number="10"><span class="header-section-number">10</span> .Ejercicio propuesto</h1>
+<p>Una alcaldía desea analizar la relación entre el gasto mensual en capacitación de funcionarios (en millones de pesos) y el número de trámites procesados correctamente por mes en distintas dependencias.</p>
+<ol type="1">
+<li>Identifique la variable respuesta y la variable explicativa.</li>
+<li>Formule el modelo poblacional de regresión lineal simple.</li>
+<li>Estime el modelo y escriba la ecuación de regresión.</li>
+<li>Interprete el intercepto y la pendiente en el contexto del problema.</li>
+<li>Contraste <span class="math inline">H_0:\beta_1=0</span> frente a <span class="math inline">H_1:\beta_1\ne0</span>, con <span class="math inline">\alpha=0.05</span>.</li>
+<li>Interprete el coeficiente de determinación.</li>
+<li>Valide linealidad, normalidad, homocedasticidad e influencia mediante gráficos y pruebas apropiadas.</li>
+<li>Explique cómo procedería si se detecta heterocedasticidad.</li>
+<li>Estime la respuesta media y prediga una observación individual para un gasto elegido dentro del rango muestral.</li>
+<li>Redacte una conclusión que distinga asociación estadística de causalidad.</li>
+</ol>
+</section>
+<section id="conclusiones" class="level1" data-number="11">
+<h1 data-number="11"><span class="header-section-number">11</span> .Conclusiones</h1>
+<p>La regresión lineal simple permite resumir y cuantificar una asociación lineal entre dos variables cuantitativas. Su interpretación exige analizar los coeficientes en sus unidades originales, valorar la incertidumbre y revisar la capacidad explicativa del modelo. La validación de supuestos es una parte esencial del análisis: los gráficos y las pruebas estadísticas ofrecen evidencia diagnóstica, pero ninguna prueba aislada certifica que el modelo sea adecuado. Finalmente, una asociación estadística no demuestra causalidad y las predicciones fuera del rango observado requieren especial cautela.</p>
+</section>
+<section id="referencias-bibliográficas" class="level1" data-number="12">
+<h1 data-number="12"><span class="header-section-number">12</span> .Referencias bibliográficas</h1>
+<ul>
+<li>Fox, J. (2016). <em>Applied Regression Analysis and Generalized Linear Models</em> (3rd ed.). SAGE Publications.</li>
+<li>James, G., Witten, D., Hastie, T., Tibshirani, R., &amp; Taylor, J. (2023). <em>An Introduction to Statistical Learning: with Applications in R</em> (2nd ed.). Springer. https://www.statlearning.com/</li>
+<li>Montgomery, D. C., Peck, E. A., &amp; Vining, G. G. (2021). <em>Introduction to Linear Regression Analysis</em> (6th ed.). Wiley.</li>
+<li>R Core Team. (2026). <em>R: A Language and Environment for Statistical Computing</em>. R Foundation for Statistical Computing. https://www.r-project.org/</li>
+</ul>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiado");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiado");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+<script src="index_files/libs/quarto-html/zenscroll-min.js"></script>
+</body></html>
